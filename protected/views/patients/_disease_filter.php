@@ -30,6 +30,9 @@
         		$confirm_selection = ' checked ';
         	}
         }
+        else {
+        	$confirm_selection = 'checked';
+        }
 
 		echo "<li>
 			<label>
