@@ -34,7 +34,7 @@
         $criteria->addInCondition('disease.disease_id', $selected_diseases);
     }
 
-    $activeprodiver = new CActiveDataProvider(PatientDisease, array(
+    $activeprodiver = new CActiveDataProvider('PatientDisease', array(
         'criteria'=>$criteria,
         'pagination'=> false,
         'sort'=>array(
