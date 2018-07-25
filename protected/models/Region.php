@@ -104,4 +104,49 @@ class Region extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function division_all_tehsils(){
+		$criteria=new CDbCriteria;
+		$criteria->compare('type','District');
+		$criteria->compare('parent',$this->region_id);
+		$dp = new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination' => false,
+            'sort'=>array(
+                'defaultOrder'=> 'label ASC',
+            ),
+		));
+
+		$all_tehsils = array();
+		foreach ($dp->getData() as $b) {
+			array_push( $all_tehsils, $b->region_id );
+			$all_tehsils = array_merge( $all_tehsils, $this->all_tehsils($b->region_id) );
+		}
+		return $all_tehsils;
+	}
+
+	public function all_tehsils($id=false){
+		$criteria=new CDbCriteria;
+		$criteria->compare('type','Tehsil');
+		if ( $id ) {
+			$criteria->compare('parent',$id);
+		}
+		else {
+			$criteria->compare('parent',$this->region_id);
+		}
+		$dp = new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination' => false,
+            'sort'=>array(
+                'defaultOrder'=> 'label ASC',
+            ),
+		));
+
+		$all_tehsils = array();
+		foreach ($dp->getData() as $b) {
+			array_push($all_tehsils, $b->region_id);
+		}
+		return $all_tehsils;
+	}
+
 }

@@ -155,11 +155,6 @@ var onTehsilSelect = function(value){
 <?php if($values['state_id']): ?>
 	setTimeout(function(){
 		$('#division_dropdown')[0].selectize.trigger( "change" );
-	}, 1000);
-<?php endif; ?>
-<?php if($values['district_id']): ?>
-	setTimeout(function(){
-		$('#district_dropdown')[0].selectize.trigger( "change" );
-	}, 1000);
+	}, 500);
 <?php endif; ?>
 </script>

@@ -6,8 +6,34 @@
 </div>
 
 <?php
+
+    $state    = Yii::app()->user->getState('state_id');
+    $district = Yii::app()->user->getState('district_id');
+    $tehsil   = Yii::app()->user->getState('tehsil_id');
+    $region   = null;
+    if ( $tehsil ) {
+        $region = $tehsil->region_id;
+    }
+    elseif ( $district ) {
+        $region = $district->all_tehsils();
+    }
+    elseif ( $state ) {
+        $region   = $state->division_all_tehsils(); 
+    }
+
+    $selected_diseases = array();
+    if ( array_key_exists('disease_selected', $_GET) ) {
+        $selected_diseases = $_GET['disease_selected'];
+    }
+
     $criteria = new CDbCriteria;
     $criteria->with = array('disease', 'patient');
+    $criteria->addInCondition('region', $region);
+
+    if ( sizeof($selected_diseases) ) {
+        $criteria->addInCondition('disease.disease_id', $selected_diseases);
+    }
+
     $activeprodiver = new CActiveDataProvider(PatientDisease, array(
         'criteria'=>$criteria,
         'pagination'=> false,
@@ -16,6 +42,14 @@
         ),
     ));
 ?>
+
+<div id="stat_overview">
+    <?php
+        $this->renderPartial('//patients/_stats_overview',array(
+            'activeprodiver'=>$activeprodiver
+        ));
+    ?>
+</div>
 
 <div id="progress"><div id="progress-bar">&nbsp;Loading...</div></div>
 <div id="propmap" style="width: 100%; height: 400px"></div>
