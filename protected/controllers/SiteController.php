@@ -33,7 +33,77 @@ class SiteController extends Controller
             )
         );
     }
-    
+
+    public function actionTehsil($id)
+    {
+        if (!$id){
+            return;
+        }
+        $data = Region::model()->findAll( "type like 'Tehsil' AND parent =$id", array('order' => "label ASC"));
+        $results = array();
+        foreach ($data as $d) {
+            array_push($results, array( 'value' => $d->region_id, 'text' => $d->label ));
+        }
+        echo json_encode ( $results );
+        Yii::app()->end();
+    }
+
+    public function actionDistricts($id)
+    {
+        if (!$id){
+            return;
+        }
+        $data = Region::model()->findAll( "type like 'District' AND parent =$id", array('order' => "label ASC"));
+        $results = array();
+        foreach ($data as $d) {
+            array_push($results, array( 'value' => $d->region_id, 'text' => $d->label ));
+        }
+        echo json_encode ( $results );
+        Yii::app()->end();
+    }
+
+    public function actionGetpatientInfo($id)
+    {
+        if (!$id){
+            return;
+        }
+        $patient = Region::model()->findByPk($value);
+        $html = $this->renderPartial('index',array('patient' => $patient));
+        echo json_encode( $html );
+        Yii::app()->end();
+    }
+
+    public function actionGetpatient($id)
+    {
+        if (!$id){
+            return;
+        }
+        echo json_encode( Region::model()->findByPk($value) );
+        Yii::app()->end();
+    }
+
+    public function actionsetSelection(){
+        Yii::app()->user->setState('tehsil_id', '');
+        if ( array_key_exists('Finder', $_GET) ) {
+            foreach ($_GET['Finder'] as $key => $value) {
+
+                if ( $key == 'state_id' ) {
+                    $division = Region::model()->findByPk($value);
+                    Yii::app()->user->setState($key, $division);
+                }
+                if ( $key == 'tehsil_id' ) {
+                    $tehsil = Region::model()->findByPk($value);
+                    Yii::app()->user->setState($key, $tehsil);
+                }
+                if ( $key == 'district_id' ) {
+                    $district = Region::model()->findByPk($value);
+                    Yii::app()->user->setState($key, $district);
+                }
+            }
+        }
+        $this->redirect($_GET['redirect']);
+    }
+
     /**
      * This is the default 'index' action that is invoked
      * when an action is not explicitly requested by users.
@@ -45,109 +115,92 @@ class SiteController extends Controller
     }
 
     public function actionPopulatePatient($count){
-       /* 
-       $names = array(
-            array( "name" => "Aditi Musunur", "gender" => 'F', "age" => "25" ),
-            array( "name" => "Advitiya Sujeet", "gender" => 'F', "age" => "24" ),
-            array( "name" => "Alagesan Poduri", "gender" => 'M', "age" => "30" ),
-            array( "name" => "Amrish Ilyas", "gender" => 'M', "age" => "32" ),
-            array( "name" => "Aprativirya Seshan", "gender" => 'M', "age" => "31" ),
-            array( "name" => "Asvathama Ponnada", "gender" => 'M', "age" => "28" ),
-            array( "name" => "Avantas Ghosal", "gender" => 'M', "age" => "25" ),
-            array( "name" => "Avidosa Vaisakhi", "gender" => 'M', "age" => "27" ),
-            array( "name" => "Barsati Sandipa", "gender" => 'M', "age" => "38" ),
-            array( "name" => "Debasis Sundhararajan", "gender" => 'M', "age" => "30" ),
-            array( "name" => "Devasru Subramanyan", "gender" => 'M', "age" => "30" ),
-            array( "name" => "Dharmadhrt Ramila", "gender" => 'F', "age" => "34" ),
-            array( "name" => "Dhritiman Salim", "gender" => 'M', "age" => "35" ),
-            array( "name" => "Gopa Trilochana", "gender" => 'M', "age" => "36" ),
-            array( "name" => "Hardeep Suksma", "gender" => 'M', "age" => "38" ),
-            array( "name" => "Jayadev Mitali", "gender" => 'M', "age" => "40" ),
-            array( "name" => "Jitendra Choudhary", "gender" => 'M', "age" => "40" ),
-            array( "name" => "Kalyanavata Veerender", "gender" => 'F', "age" => "42" ),
-            array( "name" => "Naveen Tikaram", "gender" => 'M', "age" => "30" ),
-            array( "name" => "Vijai Sritharan", "gender" => 'M', "age" => "32" ),
-        );
 
-          $criteria = new CDbCriteria;
-            $activeprodiver = new CActiveDataProvider('Data', array(
-                'criteria'=>$criteria,
-                'pagination'=> false,
-                'sort'=>array(
-                    'defaultOrder'=> 'RAND()',
-                ),
-            ));
+/*
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('lat is NULL AND lan is NULL');
+        $activeprodiver = new CActiveDataProvider(Region, array(
+            'criteria'=>$criteria,
+            'pagination'=> false,
+        ));
 
-            foreach ($activeprodiver->getData() as $datas) {
+        foreach ($activeprodiver->getData() as $r) {
 
-           $address = urlencode("$datas->address,Rajasthan");     
+            if ( $r->type == 'State' ) {
+                $address = urldecode("Rajasthan");
+            }            
 
-           $json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&region=india");
+            if ( $r->type == 'District' ) {
+                $address = urldecode("$r->label,Rajasthan");
+            }
 
-             $json = json_decode($json);
+            if ( $r->type == 'Tehsil' ) {
+                $district = Region::model()->findByAttributes(array('type'=>'District','region_id'=>$r->parent));
+                $address = urlencode("$district->label,$r->label,Rajasthan");
+            }
 
-      if(!empty($json->results))
-           {
-            $lat = $json->results[0]->geometry->location->lat;
-            $long = $json->results[0]->geometry->location->lng;
-            $city = $json->results[0]->address_components['1']->long_name;
-           }else{
-            echo "sorry data is not fetch";
-            print_r($json); die;
-           }
+            $url = "https://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&region=india&key=AIzaSyDo-a36fpsL1ZOYULv0A7hzhOuiW9-0Kew";
 
-            $p = new Patients;
-            $p->name = $datas->name;
-            $p->gender = $datas->gender;
-            $p->age = $datas->age;
-            $p->address = $datas->address;
-           $p->city = $city;
-            $p->state = 'Rajasthan';
-            $p->lat = $lat;
-            $p->lan = $long;
-            $p->reported_on = date('Y-m-d H:i:s');
-           $p->reported_from = $city." - dispensary";
-            $p->save();    
+            $result = json_decode( file_get_contents($url), true);
+            if ( $result ) {
+                $location = $result['results'][0]['geometry']['location'];
+                var_dump( $address );
+                echo '<br/>';
+                $r->lat = $location['lat'];
+                $r->lan = $location['lng'];
+                $r->save();
+            }
+            sleep(2);
         }
-    }
-}
-        foreach ($names as $person) {
+*/
 
-            $criteria = new CDbCriteria;
-            $criteria->limit = 1;
-            $activeprodiver = new CActiveDataProvider(CityCord, array(
-                'criteria'=>$criteria,
-                'pagination'=> false,
-                'sort'=>array(
-                    'defaultOrder'=> 'RAND()',
-                ),
-            ));
 
-            $city = $activeprodiver->getData();
-            $city = $city[0];
+        $criteria = new CDbCriteria;
+        $criteria->addCondition('lat is NULL AND lan is NULL');
+        $activeprodiver = new CActiveDataProvider(Patients, array(
+            'criteria'=>$criteria,
+            'pagination'=> false,
+        ));
 
-            $p = new Patients;
-            $p->name = $person['name'];
-            $p->gender = $person['gender'];
-            $p->age = rand(25, 45);
-            $p->address = "xyz road ". $city->city . ", Rajasthan";
-            $p->city = $city->city;
-            $p->state = 'Rajasthan';
-            $p->lat = $city->lat;
-            $p->lan = $city->lan;
-            $p->reported_on = date('Y-m-d H:i:s');
-            $p->reported_from = $city->city ." - dispensary";
-            $p->save();
+        $prev_address = '';
+        $prev_lat = '';
+        $prev_lan = '';
+        foreach ($activeprodiver->getData() as $r) {
+
+            $address = urlencode($r->address .', '. $r->tehsil() . ', '. $r->tehsil() .', Rajasthan');
+
+            if ( $prev_address == $address ) {
+                $r->lat = $prev_lat;
+                $r->lan = $prev_lan;
+                $r->update();
+            }
+            else {
+                echo " $address <br/>";
+
+                $url = "https://maps.google.com/maps/api/geocode/json?address=$address&sensor=false&region=india&key=AIzaSyDo-a36fpsL1ZOYULv0A7hzhOuiW9-0Kew";
+
+                $result = json_decode( file_get_contents($url), true);
+                if ( $result ) {
+                    $location = $result['results'][0]['geometry']['location'];
+                    $r->lat = $location['lat'];
+                    $r->lan = $location['lng'];
+                    $r->save();
+
+                    $prev_address = $address;
+                    $prev_lan = $r->lan;
+                    $prev_lat = $r->lat;
+                }
+                sleep(2);
+            }
         }
 
+
+/*
             // Add Patient disease
             $criteria = new CDbCriteria;
             $activeprodiver = new CActiveDataProvider(Patients, array(
                 'criteria'=>$criteria,
                 'pagination'=> false,
-                'sort'=>array(
-                    'defaultOrder'=> 'RAND()',
-                ),
             ));
 
             foreach ($activeprodiver->getData() as $p) {
@@ -169,9 +222,40 @@ class SiteController extends Controller
                 $pd->added_on = date('Y-m-d H:i:s');
                 $pd->save();
             }
-        }
 */
-}
+
+    }
+
+    public function actionAssignDiseasePatient(){
+
+        // Add Patient disease
+        $criteria = new CDbCriteria;
+        $activeprodiver = new CActiveDataProvider(Patients, array(
+            'criteria'=>$criteria,
+            'pagination'=> false,
+        ));
+
+        foreach ($activeprodiver->getData() as $p) {
+            $criteria = new CDbCriteria;
+            $criteria->limit = 1;
+            $activeprodiver = new CActiveDataProvider(Disease, array(
+                'criteria'=>$criteria,
+                'pagination'=> false,
+                'sort'=>array(
+                    'defaultOrder'=> 'RAND()',
+                ),
+            ));
+            $disease = $activeprodiver->getData();
+            $disease = $disease[0];
+
+            $pd = new PatientDisease;
+            $pd->patient_id = $p->patient_id;
+            $pd->disease_id = $disease->disease_id;
+            $pd->added_on = date('Y-m-d H:i:s');
+            $pd->save();
+        }
+
+    }
 
 
 }

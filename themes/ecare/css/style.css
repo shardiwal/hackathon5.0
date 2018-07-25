@@ -8,3 +8,36 @@ body{
 h1, h2, h3, p {
     margin: 5px 0px;
 }
+.diseaselist,
+.filterhead{
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    padding: 10px 7%;
+    background: rgba(217,237,247,0.8);
+    z-index: 1000;
+}
+.disease_filter ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+.disease_filter ul li {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0px 19px;
+    font-weight: bold;
+}
+.diseaselist {
+    top: auto;
+    bottom: 0px;
+    text-align: center;
+}
+.disease_filter ul li img{
+    margin-right: 3px;
+    width: 15px;
+}
+.disease_filter ul li input{
+    vertical-align: middle;
+}
+
