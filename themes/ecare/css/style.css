@@ -40,4 +40,49 @@ h1, h2, h3, p {
 .disease_filter ul li input{
     vertical-align: middle;
 }
-
+#stat_overview {
+    padding: 10px;
+    position: absolute;
+    z-index: 100;
+    width: 25%;
+    right: 0px;
+    background: rgba(255,255,255,0.8);
+    top: 77px;
+}
+#stat_overview .card-body {
+    padding: 10px;
+}
+#stat_overview .card-header{
+    padding: 0px;
+}
+#stat_overview h1,
+#stat_overview h2 {
+    font-size: 17px;
+    margin-bottom: 10px;
+    border-bottom: 1px dotted;
+    padding-bottom: 5px;
+}
+#stat_overview ul {
+    padding: 0;
+    margin: 0;
+}
+#stat_overview ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+#stat_overview ul.disease_s li,
+#stat_overview ul.age_s li {
+    display: block;
+}
+#stat_overview ul.regional{
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+#stat_overview ul.regional li.dist{
+    border-bottom: 1px dotted;
+}
+#stat_overview ul li label{
+    font-weight: bold;
+    margin-right: 10px;
+}
