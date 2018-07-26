@@ -1,9 +1,13 @@
 <?php
+    $district_selected = Yii::app()->user->getState('district_id');
+
     $region_wise = array();
+    $district_wise = array();
     $gender_wise = array(
         'Male' => 0,
         'Female' => 0,
     );
+
     $disease_wise = array();
     $age_wise = array(
         array( 'count' => 0, 'age' => '0-14', 'label' => '(children)' ), 
@@ -39,6 +43,11 @@
 
         $district = $data->patient->district();
         $tehsil   = $data->patient->tehsil();
+
+        if ( !array_key_exists($district, $district_wise) ) {
+            $district_wise[$district] = 0;
+        }
+        $district_wise[$district]++;
 
         if ( !array_key_exists($district, $region_wise) ) {
             $region_wise[$district] = array();
@@ -150,7 +159,10 @@
             $disesae_list = Disease::model()->findAll("", array('order' => "disease ASC"));
             foreach ($disesae_list as $d) {
                 $disease_id = $d->disease_id;
-                $stat       = $disease_wise[$disease_id];
+                $stat = '';
+                if ( array_key_exists($disease_id, $disease_wise) ) {
+                    $stat = $disease_wise[$disease_id];
+                }
                 $disease    = $d->disease;
                 $count      = 0;
 
@@ -197,12 +209,19 @@
       <div class="card-body">
         <ul class="regional">
         <?php
-            foreach ($region_wise as $district => $tehsils) {
-                echo "<li class='dist'><label>$district:</label><ul>";
-                foreach ($tehsils as $key => $value) {
-                    echo "<li><label>$key:</label><span>$value</span></li>";
+            if ( $district_selected ) {
+                foreach ($region_wise as $district => $tehsils) {
+                    echo "<li class='dist'><label>$district:</label><ul>";
+                    foreach ($tehsils as $key => $value) {
+                        echo "<li><label>$key:</label><span class='badge badge-primary'>$value</span></li>";
+                    }
+                    echo "</ul></li>";
                 }
-                echo "</ul></li>";
+            }
+            else {
+                foreach ($district_wise as $district => $count) {
+                    echo "<li><label>$district:</label><span class='badge badge-primary'>$value</span></li>";
+                }
             }
         ?>
         </ul>
