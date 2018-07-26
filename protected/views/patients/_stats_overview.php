@@ -1,7 +1,9 @@
 <?php
-
     $region_wise = array();
-    $gender_wise = array();
+    $gender_wise = array(
+        'Male' => 0,
+        'Female' => 0,
+    );
     $disease_wise = array();
     $age_wise = array(
         array( 'count' => 0, 'age' => '0-14', 'label' => '(children)' ), 
@@ -13,10 +15,14 @@
 
     foreach ($activeprodiver->getData() as $data) {
         $disease = $data->disease->disease;
-        if ( !array_key_exists($disease, $disease_wise) ) {
-            $disease_wise[$disease] = 0;
+        $disease_id = $data->disease_id;
+        if ( !array_key_exists($disease_id, $disease_wise) ) {
+            $disease_wise[$disease_id] = array(
+                'count' => 0,
+                'disease' => $disease
+            );
         }
-        $disease_wise[$disease]++;
+        $disease_wise[$disease_id]['count']++;
 
         if ( !array_key_exists($data->patient->gender, $gender_wise) ) {
             $gender_wise[$data->patient->gender] = 0;
@@ -44,6 +50,11 @@
     }
 ?>
 
+<?php $form=$this->beginWidget('CActiveForm', array(
+    'action' => Yii::app()->createUrl('site/index'),
+    'method' => 'GET',
+    'enableAjaxValidation'=>false,
+)); ?>
 
 <div class="accordion" id="accordionExample">
   <div class="card">
@@ -58,9 +69,25 @@
     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
       <div class="card-body">
         <ul>
+        <li>
+            <label>
+                <input type='radio' name='selected_gender' <?php if(!$selected_gender){ echo 'checked'; } ?> value=''>
+                All
+            </label>
+        </li>
         <?php
             foreach ($gender_wise as $key => $value) {
-                echo "<li><label>$key:</label><span>$value</span></li>";
+                $selected = '';
+                if ( $key == $selected_gender ) {
+                    $selected = 'checked';
+                }
+                echo "<li>
+                    <label>
+                        <input type='radio' $selected name='selected_gender' value='$key'>
+                        $key:
+                    </label>
+                    <span class='badge badge-primary'>$value</span>
+                </li>";
             }
         ?>
         </ul>
@@ -75,14 +102,32 @@
         </button>
       </h5>
     </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
       <div class="card-body">
         <ul class="age_s">
+        <li>
+            <label>
+                <input type='radio' name='selected_age_group' <?php if(!$selected_age_group){ echo 'checked'; } ?> value=''>
+                All
+            </label>
+        </li>
         <?php
             foreach ($age_wise as $v) {
-                $label = $v['age'] .' '. $v['label'];
+                $age_  = $v['age'];
+                $label = $age_ .' '. $v['label'];
                 $count = $v['count'];
-                echo "<li><label>$label:</label><span>$count</span></li>";
+
+                $selected = '';
+                if ( $age_ == $selected_age_group ) {
+                    $selected = 'checked';
+                }
+                echo "<li>
+                    <label>
+                        <input type='radio' $selected name='selected_age_group' value='$age_'>
+                        $label:
+                    </label>
+                    <span class='badge badge-primary'>$count</span>
+                </li>";
             }
         ?>
         </ul>
@@ -97,12 +142,43 @@
         </button>
       </h5>
     </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
       <div class="card-body">
-        <ul class="disease_s">
+        <ul class="disease_filter">
         <?php
-            foreach ($disease_wise as $key => $value) {
-                echo "<li><label>$key:</label><span>$value</span></li>";
+
+            $disesae_list = Disease::model()->findAll("", array('order' => "disease ASC"));
+            foreach ($disesae_list as $d) {
+                $disease_id = $d->disease_id;
+                $stat       = $disease_wise[$disease_id];
+                $disease    = $d->disease;
+                $count      = 0;
+
+                if ( $stat ) {
+                    $disease    = $stat['disease'];
+                    $count      = $stat['count'];
+                }
+
+                $disease_icon = strtolower($disease);
+                $disease_icon = str_replace(' ', '_', $disease_icon);
+                $path = Yii::app()->baseUrl . '/images/' . $disease_icon. '-icon.png';
+
+                $confirm_selection = '';
+                if ( sizeof($selected_diseases) ) {
+                    $is_selected = in_array($disease_id, $selected_diseases);
+                    if ( $is_selected ) {
+                        $confirm_selection = ' checked ';
+                    }
+                }
+                else {
+                    $confirm_selection = 'checked';
+                }
+
+                echo "<li>
+                    <span><img src='$path'></span>
+                    <input type='checkbox' $confirm_selection name='disease_selected[]' value='$disease_id'>
+                    <label>$disease:</label><span class='badge badge-primary'>$count</span>
+                </li>";
             }
         ?>
         </ul>
@@ -134,3 +210,11 @@
     </div>
   </div>
 </div>
+
+<?php $this->endWidget(); ?>
+
+<script type="text/javascript">
+    $('#stat_overview input[type="checkbox"],#stat_overview input[type="radio"]').click( function(e){
+        $(this).closest('form').trigger('submit');
+    });
+</script>

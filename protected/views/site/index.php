@@ -1,11 +1,26 @@
 <div class="filterhead noprint">
 	<?php $this->renderPartial('//patients/_filter'); ?>
 </div>
-<div class="diseaselist noprint">
-    <?php $this->renderPartial('//patients/_disease_filter'); ?>
+<div class="topbar noprint">
+    <h4>An Artificial Intelligence tool for Health Monitoring</h4>
+    <p>An aproach using Geographical Tagging</p>
 </div>
-
 <?php
+
+    $selected_diseases = array();
+    if ( array_key_exists('disease_selected', $_GET) ) {
+        $selected_diseases = $_GET['disease_selected'];
+    }
+
+    $selected_gender = null;
+    if ( array_key_exists('selected_gender', $_GET) ) {
+        $selected_gender = $_GET['selected_gender'];
+    }
+
+    $selected_age_group = null;
+    if ( array_key_exists('selected_age_group', $_GET) ) {
+        $selected_age_group = $_GET['selected_age_group'];
+    }
 
     $state    = Yii::app()->user->getState('state_id');
     $district = Yii::app()->user->getState('district_id');
@@ -21,17 +36,19 @@
         $region   = $state->division_all_tehsils(); 
     }
 
-    $selected_diseases = array();
-    if ( array_key_exists('disease_selected', $_GET) ) {
-        $selected_diseases = $_GET['disease_selected'];
-    }
-
     $criteria = new CDbCriteria;
     $criteria->with = array('disease', 'patient');
     $criteria->addInCondition('region', $region);
 
     if ( sizeof($selected_diseases) ) {
         $criteria->addInCondition('disease.disease_id', $selected_diseases);
+    }
+    if ( $selected_gender ) {
+        $criteria->addCondition("patient.gender='$selected_gender'");
+    }
+    if ( $selected_age_group ) {
+        $age_g = explode('-', $selected_age_group);
+        $criteria->addBetweenCondition('patient.age', $age_g[0], $age_g[1]);
     }
 
     $activeprodiver = new CActiveDataProvider('PatientDisease', array(
@@ -46,7 +63,10 @@
 <div id="stat_overview">
     <?php
         $this->renderPartial('//patients/_stats_overview',array(
-            'activeprodiver'=>$activeprodiver
+            'activeprodiver'=>$activeprodiver,
+            'selected_diseases' => $selected_diseases,
+            'selected_gender' => $selected_gender,
+            'selected_age_group' => $selected_age_group
         ));
     ?>
 </div>
