@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 26, 2018 at 03:14 PM
+-- Generation Time: Jul 26, 2018 at 06:38 PM
 -- Server version: 5.1.41
 -- PHP Version: 5.3.1
 
@@ -29,6 +29,10 @@ CREATE TABLE IF NOT EXISTS `disease` (
   `disease_id` int(10) NOT NULL AUTO_INCREMENT,
   `disease` varchar(255) NOT NULL,
   `description` text,
+  `type` varchar(255) DEFAULT NULL,
+  `symptoms` text,
+  `factors` text,
+  `season_month` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`disease_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
 
@@ -36,14 +40,41 @@ CREATE TABLE IF NOT EXISTS `disease` (
 -- Dumping data for table `disease`
 --
 
-INSERT INTO `disease` (`disease_id`, `disease`, `description`) VALUES
-(1, 'Dengue', NULL),
-(2, 'Typhoid', NULL),
-(3, 'Tuberculosis (TB)', NULL),
-(4, 'Malaria', NULL),
-(5, 'HIV', NULL),
-(6, 'AIDS', NULL),
-(7, 'Cancer', NULL);
+INSERT INTO `disease` (`disease_id`, `disease`, `description`, `type`, `symptoms`, `factors`, `season_month`) VALUES
+(1, 'Dengue', NULL, 'Viral', 'High fever.\r\nSevere headaches.\r\nPain behind the eyes.\r\nSevere joint and muscle pain.\r\nFatigue.\r\nNausea.\r\nVomiting.\r\nSkin rash.', NULL, '6,7,8'),
+(2, 'Typhoid', NULL, 'Bacterial', 'high fever.\r\nweakness.\r\nstomach pain.\r\nheadache.\r\npoor appetite.\r\nrash.\r\nfatigue.\r\nconfusion.\r\nconstipation, diarrhea.', NULL, NULL),
+(3, 'Tuberculosis (TB)', NULL, NULL, NULL, NULL, NULL),
+(4, 'Malaria', NULL, NULL, 'Fever.\r\nFatigue.\r\nChills.\r\nVomiting.\r\nHeadaches.\r\nDiarrhea.\r\nAnemia.', NULL, NULL),
+(5, 'Polio', NULL, NULL, NULL, NULL, NULL),
+(6, 'AIDS', NULL, NULL, NULL, NULL, NULL),
+(7, 'Cancer', NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disease_correlation`
+--
+
+CREATE TABLE IF NOT EXISTS `disease_correlation` (
+  `dco_id` int(10) NOT NULL AUTO_INCREMENT,
+  `disease_id` int(10) NOT NULL,
+  `co_disease_id` int(10) NOT NULL,
+  `symptoms_score` float(10,2) DEFAULT NULL,
+  `area_score` float(10,2) DEFAULT NULL,
+  `career_score` float(10,2) DEFAULT NULL,
+  `factor_score` float(10,2) DEFAULT NULL,
+  `session_score` float(10,2) DEFAULT NULL,
+  `reference` text,
+  `suggestion` text,
+  PRIMARY KEY (`dco_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `disease_correlation`
+--
+
+INSERT INTO `disease_correlation` (`dco_id`, `disease_id`, `co_disease_id`, `symptoms_score`, `area_score`, `career_score`, `factor_score`, `session_score`, `reference`, `suggestion`) VALUES
+(1, 1, 2, 8.00, 6.00, 5.00, 6.50, 8.00, 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4316251/\r\nhttps://www.ncbi.nlm.nih.gov/pubmed/19745521/\r\n', 'Acute febrile illness (AFI) is a common clinical syndrome among patients seeking hospital care in India.\r\n\r\nBoth dengue and typhoid occur seasonally in India especially during the monsoons where on one hand mosquito breeding and on other hand faeco- oral transmission occurs actively.');
 
 -- --------------------------------------------------------
 
