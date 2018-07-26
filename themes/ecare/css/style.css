@@ -4,6 +4,7 @@ body{
     margin: 0;
     font-size: 13px;
     color:#333;
+    overflow: hidden;
 }
 h1, h2, h3, p {
     margin: 5px 0px;
@@ -11,12 +12,13 @@ h1, h2, h3, p {
 .topbar,
 .filterhead{
     position: absolute;
-    bottom: 0px;
+    top: 0px;
     width: 100%;
     padding: 10px 7%;
-    background: rgba(136, 199, 231, 0.8);
+    background: rgba(247, 247, 247, 0.8);
     z-index: 1000;
 }
+
 .disease_filter ul {
     list-style-type: none;
     margin: 0px;
@@ -29,10 +31,9 @@ h1, h2, h3, p {
     font-weight: bold;
 }
 .topbar {
-    top: 0px;
-    bottom: auto;
     text-align: center;
     padding: 4px;
+    border-bottom: 1px solid #dfdfdf;
 }
 .topbar h4 {
     color: #000;
@@ -43,13 +44,46 @@ h1, h2, h3, p {
     font-size: 16px;
     font-weight: bold;
 }
+.filterhead.toggled {
+    left: -218px;
+}
+#stat_overview.toggled {
+    right: -338px;
+}
+.topbar .action_button {
+    text-align: right;
+    padding-right: 10px;
+    margin-top: -30px;
+    padding-bottom: 5px;
+}
+.topbar .action_button button {
+    margin-right: 10px;
+}
+.filterhead,
 #stat_overview {
     padding: 10px;
     position: absolute;
     z-index: 1000;
-    width: 25%;
+    width: 380px;
     right: 0px;
     top: 62px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.filterhead{
+    width: 245px;
+    right: auto;
+    top: 72px;
+    left: 10px;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
 }
 #stat_overview .card-body {
     padding: 10px;
@@ -76,10 +110,8 @@ h1, h2, h3, p {
 #stat_overview ul.age_s li {
     display: block;
 }
-#stat_overview ul.regional{
-    max-height: 600px;
-    overflow-x: hidden;
-    overflow-y: scroll;
+#stat_overview ul.regional li{
+    width: 40%;
 }
 #stat_overview ul.regional li.dist{
     border-bottom: 1px dotted;
@@ -97,11 +129,13 @@ h1, h2, h3, p {
 }
 #stat_overview ul.disease_filter li input{
     vertical-align: middle;
-
 }
 .table {
     width: 50%;
     /* margin-bottom: 1rem; */
     background-color: transparent;
     line-height: 1;
+}
+#stat_overview ul.regional ul.tehsil {
+    list-style-type: disc;
 }

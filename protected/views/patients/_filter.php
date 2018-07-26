@@ -20,8 +20,15 @@
 	'htmlOptions' => array('enctype' => 'multipart/form-data', 'class'=>'form-horizontal'),
 )); ?>
 
+<div class="card-header">
+  <h6 class="mb-0">
+      Choose Your Region
+  </h6>
+</div>
+
 <div class="row">
-	<div class="col-sm" style="padding-left: 0px;">
+
+	<div class="col-sm">
 		<?php //echo CHtml::label('District','',array('class'=>'control-label')); ?>
 		<?php
 			$this->widget('ext.yii-selectize.YiiSelectize', array(
@@ -79,19 +86,31 @@
 
 	<div class="col-sm">
 		<?php echo CHtml::hiddenField('redirect', Yii::app()->request->url ); ?>
-		<?php echo CHtml::submitButton('Set Selection',array('class'=>'btn btn-primary')); ?>
+		<?php echo CHtml::submitButton('Set Region',array('class'=>'btn btn-primary')); ?>
 	</div>
 
-	<div class="col-sm">
-		<b>Your Selection:</b> <br/>
-		State: <?php echo Yii::app()->user->getState('state_id') ? Yii::app()->user->getState('state_id')->label : '...'; ?>,
-		District: <?php echo Yii::app()->user->getState('district_id') ? Yii::app()->user->getState('district_id')->label : '...'; ?>, 
-		Tehsil: <?php echo Yii::app()->user->getState('tehsil_id') ? Yii::app()->user->getState('tehsil_id')->label : '...'; ?> <br/>
-	</div>
+	<div class="clear clearfix"></div>
 
+	<br/>
+	<br/>
+	<br/>
 </div>
 
 <?php $this->endWidget(); ?>
+
+<div class="">
+	<b>Your Selection:</b> <br/>
+	State: <?php echo Yii::app()->user->getState('state_id') ? Yii::app()->user->getState('state_id')->label : '...'; ?>,<br/>
+	District: <?php echo Yii::app()->user->getState('district_id') ? Yii::app()->user->getState('district_id')->label : '...'; ?>,<br/>
+	Tehsil: <?php echo Yii::app()->user->getState('tehsil_id') ? Yii::app()->user->getState('tehsil_id')->label : '...'; ?> <br/>
+</div>
+
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
 </div>
 
 <script type="text/javascript">

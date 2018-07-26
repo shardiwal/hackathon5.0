@@ -4,6 +4,10 @@
 <div class="topbar noprint">
     <h4>An Artificial Intelligence tool for Health Monitoring</h4>
     <p>An aproach using Geographical Tagging</p>
+    <div class="action_button">
+        <button type="button" data-toggle="offcanvas">Toggle Filter</button>
+        <button type="button" data-toggle="offregion">Toggle Region</button>
+    </div>
 </div>
 <?php
 
@@ -174,5 +178,12 @@ $('document').ready( function(){
     markers.addLayers(markerList);
     map.addLayer(markers);
 
+    $('[data-toggle="offcanvas"]').click(function () {
+        $('#stat_overview').toggleClass('toggled');
+    });
+    $('[data-toggle="offregion"]').click(function () {
+        $('.filterhead').toggleClass('toggled');
+    });
+    
 })
 </script>
