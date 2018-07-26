@@ -1,3 +1,5 @@
+
+
 <?php
     $district_selected = Yii::app()->user->getState('district_id');
 
@@ -79,6 +81,7 @@
       <div class="card-body">
             DATE FILTER
       </div>
+           <?php $this->renderPartial('//patients/date_filter'); ?>
     </div>
   </div>
   <div class="card">
