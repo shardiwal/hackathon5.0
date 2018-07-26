@@ -112,6 +112,8 @@ h1, h2, h3, p {
 }
 #stat_overview ul.regional li{
     width: 40%;
+    list-style-type: circle;
+    display: inline;
 }
 #stat_overview ul.regional li.dist{
     border-bottom: 1px dotted;
