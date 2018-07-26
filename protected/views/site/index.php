@@ -18,6 +18,7 @@
     $selected_date_filter = null;
     $selected_start_date = null;
     $selected_end_date = null;
+    $start_date=null;
     if ( array_key_exists('date_type', $_GET) ) {
         $selected_date_filter = $_GET['date_type'];
         if ( $selected_date_filter == 'custom' ) {
@@ -157,6 +158,7 @@
       </div>
       <div class="modal-body">
     <?php
+    if ( $selected_date_filter ) {
         $this->renderPartial('//patients/_ai_stats_overview',array(
             'activeprodiver'=>$ai_activeprodiver,
             'selected_diseases' => $selected_diseases,
@@ -166,6 +168,7 @@
             'selected_start_date' =>  $ai_start_date,
             'selected_end_date' =>  $start_date
         ));
+     }
     ?>
     </div>
     </div>
