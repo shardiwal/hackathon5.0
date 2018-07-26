@@ -100,8 +100,8 @@
 
 <div class="">
 	<b>Your Selection:</b> <br/>
-	State: <?php echo Yii::app()->user->getState('state_id') ? Yii::app()->user->getState('state_id')->label : '...'; ?>,
-	District: <?php echo Yii::app()->user->getState('district_id') ? Yii::app()->user->getState('district_id')->label : '...'; ?>, 
+	State: <?php echo Yii::app()->user->getState('state_id') ? Yii::app()->user->getState('state_id')->label : '...'; ?>,<br/>
+	District: <?php echo Yii::app()->user->getState('district_id') ? Yii::app()->user->getState('district_id')->label : '...'; ?>,<br/>
 	Tehsil: <?php echo Yii::app()->user->getState('tehsil_id') ? Yii::app()->user->getState('tehsil_id')->label : '...'; ?> <br/>
 </div>
 

@@ -211,7 +211,7 @@
         <?php
             if ( $district_selected ) {
                 foreach ($region_wise as $district => $tehsils) {
-                    echo "<li class='dist'><label>$district:</label><ul>";
+                    echo "<li class='dist'><label>District: <b>$district</b></label><br/><b>Tehsil</b><ul class='tehsil'>";
                     foreach ($tehsils as $key => $value) {
                         echo "<li><label>$key:</label><span class='badge badge-primary'>$value</span></li>";
                     }

@@ -4,7 +4,7 @@
 <div class="topbar noprint">
     <h4>An Artificial Intelligence tool for Health Monitoring</h4>
     <p>An aproach using Geographical Tagging</p>
-    <div style="text-align: right; padding-right: 10px;">
+    <div class="action_button">
         <button type="button" data-toggle="offcanvas">Toggle Filter</button>
         <button type="button" data-toggle="offregion">Toggle Region</button>
     </div>

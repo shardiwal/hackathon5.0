@@ -33,6 +33,7 @@ h1, h2, h3, p {
 .topbar {
     text-align: center;
     padding: 4px;
+    border-bottom: 1px solid #dfdfdf;
 }
 .topbar h4 {
     color: #000;
@@ -49,7 +50,15 @@ h1, h2, h3, p {
 #stat_overview.toggled {
     right: -338px;
 }
-
+.topbar .action_button {
+    text-align: right;
+    padding-right: 10px;
+    margin-top: -30px;
+    padding-bottom: 5px;
+}
+.topbar .action_button button {
+    margin-right: 10px;
+}
 .filterhead,
 #stat_overview {
     padding: 10px;
@@ -101,11 +110,6 @@ h1, h2, h3, p {
 #stat_overview ul.age_s li {
     display: block;
 }
-#stat_overview ul.regional{
-    max-height: 600px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
 #stat_overview ul.regional li{
     width: 40%;
 }
@@ -125,4 +129,7 @@ h1, h2, h3, p {
 }
 #stat_overview ul.disease_filter li input{
     vertical-align: middle;
+}
+#stat_overview ul.regional ul.tehsil {
+    list-style-type: disc;
 }
