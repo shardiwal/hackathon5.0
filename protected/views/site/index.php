@@ -97,6 +97,10 @@
 <div class="filterhead noprint">
     <?php $this->renderPartial('//patients/_filter'); ?>
 
+    <?php if ( $district ): ?>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">View Analysis</button>
+    <?php endif; ?>
+
     <?php
         $alert_class = 'alert-success';
         $what = 'reduced';
@@ -145,6 +149,16 @@
 
 <div id="progress"><div id="progress-bar">&nbsp;Loading...</div></div>
 <div id="propmap" style="width: 100%; height: 400px"></div>
+
+<?php
+    if ( $district ) {
+        $this->renderPartial('//disease/correlation', array(
+            'activeprodiver'=>$activeprodiver,
+            'district_obj' => $district,
+            'tehsil_obj' => $tehsil
+        ));
+    }
+?>
 
 <!-- Modal -->
 <div class="modal fade" id="aiinfo" tabindex="-1" role="dialog" aria-labelledby="aiinfoTitle" aria-hidden="true">

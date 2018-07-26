@@ -155,7 +155,7 @@ class SiteController extends Controller
         }
 */
 
-
+/*
         $criteria = new CDbCriteria;
         $criteria->addCondition('lat is NULL AND lan is NULL');
         $activeprodiver = new CActiveDataProvider(Patients, array(
@@ -194,7 +194,7 @@ class SiteController extends Controller
                 sleep(2);
             }
         }
-
+*/
 
 /*
             // Add Patient disease

@@ -133,6 +133,15 @@ class DiseaseController extends Controller
 		return $model;
 	}
 
+	public function actionCoorid($doc_id, $session) {
+		$model = DiseaseCorrelation::model()->findByPk($doc_id);
+		echo $this->renderPartial('corid',array(
+			'model' => $model,
+			'session' => json_decode($session)
+		));
+		Yii::app()->end();
+	}
+
 	/**
 	 * Performs the AJAX validation.
 	 * @param Disease $model the model to be validated
