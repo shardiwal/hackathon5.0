@@ -150,3 +150,9 @@ h1, h2, h3, p {
     font-weight: bold;
     list-style: none;
 }
+.filterhead .alert{
+    font-size: 16px;
+}
+.filterhead .alert b{
+    font-size: 18px;
+}
