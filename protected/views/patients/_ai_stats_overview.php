@@ -67,44 +67,36 @@
     'enableAjaxValidation'=>false,
 )); ?>
 
-<div class="accordion" id="accordionExample">
+<div class="accordion" id="aiaccordionExample">
   <div class="card">
-    <div class="card-header" id="headingOne">
+    <div class="card-header" id="ai_headingOne">
       <h5 class="mb-0">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ai_collapseOne" aria-expanded="true" aria-controls="collapseOne">
           TimeLine
         </button>
       </h5>
     </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+    <div id="ai_collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#aiaccordionExample">
       <div class="card-body">
-           <?php $this->renderPartial('//patients/date_filter',array(
-                'selected_date_filter' => $selected_date_filter,
-                'selected_start_date' =>  $selected_start_date,
-                'selected_end_date' =>  $selected_end_date
-           )); ?>
+           <?php 
+                echo $selected_start_date . ' to ' . $selected_end_date;
+            ?>
       </div>
     </div>
   </div>
   <div class="card">
-    <div class="card-header" id="headingOne">
+    <div class="card-header" id="ai_headingOne">
       <h5 class="mb-0">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ai_collapseOne" aria-expanded="true" aria-controls="collapseOne">
           Demographic
         </button>
       </h5>
     </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+    <div id="ai_collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#aiaccordionExample">
       <div class="card-body">
         <ul>
-        <li>
-            <label>
-                <input type='radio' name='selected_gender' <?php if(!$selected_gender){ echo 'checked'; } ?> value=''>
-                All
-            </label>
-        </li>
         <?php
             foreach ($gender_wise as $key => $value) {
                 $selected = '';
@@ -113,7 +105,6 @@
                 }
                 echo "<li>
                     <label>
-                        <input type='radio' $selected name='selected_gender' value='$key'>
                         $key:
                     </label>
                     <span class='badge badge-primary'>$value</span>
@@ -125,22 +116,16 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header" id="headingTwo">
+    <div class="card-header" id="ai_headingTwo">
       <h5 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#ai_collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
           Age Groups
         </button>
       </h5>
     </div>
-    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample">
+    <div id="ai_collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#aiaccordionExample">
       <div class="card-body">
         <ul class="age_s">
-        <li>
-            <label>
-                <input type='radio' name='selected_age_group' <?php if(!$selected_age_group){ echo 'checked'; } ?> value=''>
-                All
-            </label>
-        </li>
         <?php
             foreach ($age_wise as $v) {
                 $age_  = $v['age'];
@@ -153,7 +138,6 @@
                 }
                 echo "<li>
                     <label>
-                        <input type='radio' $selected name='selected_age_group' value='$age_'>
                         $label:
                     </label>
                     <span class='badge badge-primary'>$count</span>
@@ -165,14 +149,14 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header" id="headingThree">
+    <div class="card-header" id="ai_headingThree">
       <h5 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#ai_collapseThree" aria-expanded="false" aria-controls="collapseThree">
           Disease Stat
         </button>
       </h5>
     </div>
-    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionExample">
+    <div id="ai_collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#aiaccordionExample">
       <div class="card-body">
         <ul class="disease_filter">
         <?php
@@ -209,7 +193,6 @@
 
                 echo "<li>
                     <span><img src='$path'></span>
-                    <input type='checkbox' $confirm_selection name='disease_selected[]' value='$disease_id'>
                     <label>$disease:</label><span class='badge badge-primary'>$count</span>
                 </li>";
             }
@@ -219,14 +202,14 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header" id="headingFour">
+    <div class="card-header" id="ai_headingFour">
       <h5 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#ai_collapseFour" aria-expanded="false" aria-controls="collapseFour">
           Regional Stat
         </button>
       </h5>
     </div>
-    <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+    <div id="ai_collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#aiaccordionExample">
       <div class="card-body">
         <ul class="regional">
         <?php
@@ -252,9 +235,3 @@
 </div>
 
 <?php $this->endWidget(); ?>
-
-<script type="text/javascript">
-    $('#stat_overview input[type="checkbox"],#stat_overview input[type="radio"]').click( function(e){
-        $(this).closest('form').trigger('submit');
-    });
-</script>

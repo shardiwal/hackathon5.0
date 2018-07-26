@@ -1,14 +1,3 @@
-<div class="filterhead noprint">
-	<?php $this->renderPartial('//patients/_filter'); ?>
-</div>
-<div class="topbar noprint">
-    <h4>An Artificial Intelligence tool for Health Monitoring</h4>
-    <p>An aproach using Geographical Tagging</p>
-    <div class="action_button">
-        <button type="button" data-toggle="offcanvas">Toggle Filter</button>
-        <button type="button" data-toggle="offregion">Toggle Region</button>
-    </div>
-</div>
 <?php
 
     $selected_diseases = array();
@@ -24,6 +13,21 @@
     $selected_age_group = null;
     if ( array_key_exists('selected_age_group', $_GET) ) {
         $selected_age_group = $_GET['selected_age_group'];
+    }
+
+    $selected_date_filter = null;
+    $selected_start_date = null;
+    $selected_end_date = null;
+    if ( array_key_exists('date_type', $_GET) ) {
+        $selected_date_filter = $_GET['date_type'];
+        if ( $selected_date_filter == 'custom' ) {
+            if ( array_key_exists('start_date', $_GET) ) {
+                $selected_start_date = $_GET['start_date'];
+            }
+            if ( array_key_exists('end_date', $_GET) ) {
+                $selected_end_date = $_GET['end_date'];
+            }
+        }
     }
 
     $state    = Yii::app()->user->getState('state_id');
@@ -55,6 +59,31 @@
         $criteria->addBetweenCondition('patient.age', $age_g[0], $age_g[1]);
     }
 
+    $ai_criteria = clone $criteria;
+
+    if ( $selected_date_filter ) {
+        if ( $selected_start_date && $selected_end_date ) {
+            $criteria->addBetweenCondition('added_on', $selected_start_date, $selected_end_date);
+        }
+        else {
+            $start_date = date("Y-m-d",strtotime("-$selected_date_filter"));
+            $end_date = date("Y-m-d");
+            $criteria->addBetweenCondition('added_on', $start_date, $end_date);
+
+            // Here AI Starts
+            $ai_start_date = date("Y-m-d",strtotime("-$selected_date_filter", strtotime($start_date)));
+            $ai_criteria->addBetweenCondition('added_on', $ai_start_date, $start_date);
+        }
+    }
+
+    $ai_activeprodiver = new CActiveDataProvider('PatientDisease', array(
+        'criteria'=>$ai_criteria,
+        'pagination'=> false,
+        'sort'=>array(
+            'defaultOrder'=> 'added_on DESC',
+        ),
+    ));
+
     $activeprodiver = new CActiveDataProvider('PatientDisease', array(
         'criteria'=>$criteria,
         'pagination'=> false,
@@ -64,19 +93,85 @@
     ));
 ?>
 
+<div class="filterhead noprint">
+    <?php $this->renderPartial('//patients/_filter'); ?>
+
+    <?php
+        $alert_class = 'alert-success';
+        $what = 'reduced';
+        if ( $selected_date_filter ) {
+            $now_patients = sizeof($activeprodiver->getData());
+            $old_patients = sizeof($ai_activeprodiver->getData());
+            $patient_stat = $now_patients - $old_patients;
+            if ( $patient_stat > 1 ) {
+                $alert_class = 'alert-danger';
+                $what = 'increased';
+            }
+            echo "
+            <div class='alert $alert_class' role='alert'>
+                Number of <b>patients $patient_stat</b> has been $what now since $start_date.
+            </div>
+            <button type='button' class='btn-sm btn-primary' data-toggle='modal' data-target='#aiinfo'>
+              View Complete State
+            </button>
+            ";
+        }
+    ?>
+</div>
+
+<div class="topbar noprint">
+    <h4>An Artificial Intelligence tool for Health Monitoring</h4>
+    <p>An aproach using Geographical Tagging</p>
+    <div class="action_button">
+        <button type="button" data-toggle="offcanvas">Toggle Filter</button>
+        <button type="button" data-toggle="offregion">Toggle Region</button>
+    </div>
+</div>
+
 <div id="stat_overview">
     <?php
         $this->renderPartial('//patients/_stats_overview',array(
             'activeprodiver'=>$activeprodiver,
             'selected_diseases' => $selected_diseases,
             'selected_gender' => $selected_gender,
-            'selected_age_group' => $selected_age_group
+            'selected_age_group' => $selected_age_group,
+            'selected_date_filter' => $selected_date_filter,
+            'selected_start_date' =>  $selected_start_date,
+            'selected_end_date' =>  $selected_end_date
         ));
     ?>
 </div>
 
 <div id="progress"><div id="progress-bar">&nbsp;Loading...</div></div>
 <div id="propmap" style="width: 100%; height: 400px"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="aiinfo" tabindex="-1" role="dialog" aria-labelledby="aiinfoTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aiinfoTitle">Stats since <?php echo $start_date; ?></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <?php
+        $this->renderPartial('//patients/_ai_stats_overview',array(
+            'activeprodiver'=>$ai_activeprodiver,
+            'selected_diseases' => $selected_diseases,
+            'selected_gender' => $selected_gender,
+            'selected_age_group' => $selected_age_group,
+            'selected_date_filter' => $selected_date_filter,
+            'selected_start_date' =>  $ai_start_date,
+            'selected_end_date' =>  $start_date
+        ));
+    ?>
+    </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
 
 <script type="text/javascript">
 $('document').ready( function(){

@@ -139,3 +139,14 @@ h1, h2, h3, p {
 #stat_overview ul.regional ul.tehsil {
     list-style-type: disc;
 }
+.modal-dialog {
+    max-width: 661px;
+    margin: 1.75rem auto;
+}
+.card-body,
+.card-body li,
+.age_s li{
+    font-size: 15px;
+    font-weight: bold;
+    list-style: none;
+}

@@ -260,11 +260,12 @@ class SiteController extends Controller
 
     public function actionranddate(){
 
-       foreach (PatientDisease::model()->findAll(array('limit' => 100)) as $l) {
-        $start = strtotime("2018-05-01 00:00:00");
+       foreach (PatientDisease::model()->findAll() as $l) {
+        $start = strtotime("2017-07-01 00:00:00");
         $end =  strtotime("2018-07-26 23:59:59");
 
         $randomDate = date("Y-m-d H:i:s", rand($start, $end));
+        echo "$randomDate <br/>";
         $l->added_on = $randomDate;
         $l->update();
        }
