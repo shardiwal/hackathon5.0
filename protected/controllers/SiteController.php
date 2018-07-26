@@ -67,10 +67,11 @@ class SiteController extends Controller
         if (!$id){
             return;
         }
-        $patient = Region::model()->findByPk($value);
-        $html = $this->renderPartial('index',array('patient' => $patient));
-        echo json_encode( $html );
-        Yii::app()->end();
+        $patient = Patients::model()->findByPk($id);
+        $this->render('/patients/view', array('patient' => $patient));
+        //$html = $this->renderPartial('index',array('patient' => $patient));
+        //echo json_encode( $html );
+        //Yii::app()->end();
     }
 
     public function actionGetpatient($id)
@@ -230,7 +231,7 @@ class SiteController extends Controller
 
         // Add Patient disease
         $criteria = new CDbCriteria;
-        $activeprodiver = new CActiveDataProvider(Patients, array(
+        $activeprodiver = new CActiveDataProvider('Patients', array(
             'criteria'=>$criteria,
             'pagination'=> false,
         ));
@@ -238,7 +239,7 @@ class SiteController extends Controller
         foreach ($activeprodiver->getData() as $p) {
             $criteria = new CDbCriteria;
             $criteria->limit = 1;
-            $activeprodiver = new CActiveDataProvider(Disease, array(
+            $activeprodiver = new CActiveDataProvider('Disease', array(
                 'criteria'=>$criteria,
                 'pagination'=> false,
                 'sort'=>array(
@@ -257,5 +258,16 @@ class SiteController extends Controller
 
     }
 
+    public function actionranddate(){
+
+       foreach (PatientDisease::model()->findAll(array('limit' => 100)) as $l) {
+        $start = strtotime("2018-05-01 00:00:00");
+        $end =  strtotime("2018-07-26 23:59:59");
+
+        $randomDate = date("Y-m-d H:i:s", rand($start, $end));
+        $l->added_on = $randomDate;
+        $l->update();
+       }
+     }
 
 }

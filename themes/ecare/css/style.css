@@ -97,4 +97,11 @@ h1, h2, h3, p {
 }
 #stat_overview ul.disease_filter li input{
     vertical-align: middle;
+
+}
+.table {
+    width: 50%;
+    /* margin-bottom: 1rem; */
+    background-color: transparent;
+    line-height: 1;
 }

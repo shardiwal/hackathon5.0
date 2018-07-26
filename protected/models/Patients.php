@@ -56,6 +56,8 @@ class Patients extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'regiond' => array(self::BELONGS_TO, 'Region', 'region'),
+			'patientdesise' => array(self::BELONGS_TO, 'PatientDisease', 'disease_id'),
+
 		);
 	}
 
@@ -172,4 +174,24 @@ class Patients extends CActiveRecord
 		}
 		return null;
 	}
+	public function photo(){
+		   if($this->gender=='Male'){
+		return Yii::app()->request->baseUrl ."/images/men.png";
+		}
+	   elseif($this->gender=='Female'){
+	   	return Yii::app()->request->baseUrl ."/images/women.png";
+	   }		
+	}
+
+	public function disease(){
+			$data=Patients::model()->findByPk($this->patient_id); 
+			  $pad = PatientDisease::model()->findAllByAttributes(array('patient_id'=>$data->patient_id));
+                    foreach ($pad as $padie) {
+                    	 $die = Disease::model()->findAllByAttributes(array('disease_id'=>$padie->disease_id));
+                    	foreach ($die as  $dies) {
+                    		$class=$dies->disease;
+                    	}
+                    }
+		        return $class;
+		    }
 }

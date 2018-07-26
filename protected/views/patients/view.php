@@ -1,36 +1,51 @@
-<?php
-/* @var $this PatientsController */
-/* @var $model Patients */
-
-$this->breadcrumbs=array(
-	'Patients'=>array('index'),
-	$model->name,
-);
-
-$this->menu=array(
-	array('label'=>'List Patients', 'url'=>array('index')),
-	array('label'=>'Create Patients', 'url'=>array('create')),
-	array('label'=>'Update Patients', 'url'=>array('update', 'id'=>$model->patient_id)),
-	array('label'=>'Delete Patients', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->patient_id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Patients', 'url'=>array('admin')),
-);
-?>
-
-<h1>View Patients #<?php echo $model->patient_id; ?></h1>
-
-<?php $this->widget('zii.widgets.CDetailView', array(
-	'data'=>$model,
+<br>
+<div class="col-12">
+<h1>Patient Info</h1>
+ <div class="col-6">
+<?php 
+$this->widget('zii.widgets.CDetailView', array(
+	'data'=>$patient,
+	'htmlOptions'=>array(
+	 'class'=>'table mg-b-0'
+					),
 	'attributes'=>array(
-		'patient_id',
+	     array(
+			'label'=>'',
+			'type'=>'raw',
+			'value' => function($data){
+     			return CHtml::image(
+			$data->photo(), '', array('style' => ' height: 100px ;text-align:center')
+			);
+			  }
+		         ),
 		'name',
 		'gender',
 		'age',
 		'address',
-		'city',
-		'state',
-		'lat',
-		'lan',
-		'reported_on',
+		array(
+		    'name'=>'reported_on',
+		    'value'=>date("d F Y"),
+		),
 		'reported_from',
+		array(
+			'label'=>'Disease',
+			'value' => function($data){
+				return $data->disease();
+			},
+	      ),
+		array(
+			'label'=>'District',
+			'value' => function($data){
+			return $data->district();
+			},
+		),
+		array(
+			'label'=>'Tehsil',
+			'value' => function($data){
+			return $data->tehsil();
+			},
+		),
 	),
 )); ?>
+</div>
+</div>
